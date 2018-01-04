@@ -38,17 +38,13 @@ class MenuForm extends AbstractType
                 'choice_attr' => function ($menu) use ($instance) {
                     return $menu->pk == $instance->pk ? ['disabled' => 'disabled'] : [];
                 },
+                'label' => 'Родительский пункт меню',
             ])
             ->add('name', TextType::class, [
                 'label' => 'Название',
                 'constraints' => [
                     new Assert\NotBlank(),
                 ],
-            ])
-            ->add('slug', TextType::class, [
-                'label' => 'Слаг',
-                'help' => 'Ключ для выбора меню. Может содержать только латинские символы и цифры.',
-                'required' => false,
             ])
             ->add('url', TextType::class, [
                 'label' => 'Адрес',
