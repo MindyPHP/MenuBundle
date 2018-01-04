@@ -46,7 +46,7 @@ class MenuController extends Controller
 
         $form = $this->createForm(MenuForm::class, $menu, [
             'method' => 'POST',
-            'action' => $this->generateUrl('admin_rise_menu_create'),
+            'action' => $this->generateUrl('admin_menu_create'),
         ]);
 
         if ($form->handleRequest($request) && $form->isValid()) {
@@ -57,7 +57,7 @@ class MenuController extends Controller
 
             $this->addFlash('success', 'Меню успешно сохранено');
 
-            return $this->redirectToRoute('admin_rise_menu_list');
+            return $this->redirectToRoute('admin_menu_list');
         }
 
         return $this->render('admin/menu/menu/create.html', [
@@ -74,7 +74,7 @@ class MenuController extends Controller
 
         $form = $this->createForm(MenuForm::class, $menu, [
             'method' => 'POST',
-            'action' => $this->generateUrl('admin_rise_menu_update', ['id' => $id]),
+            'action' => $this->generateUrl('admin_menu_update', ['id' => $id]),
         ]);
 
         if ($form->handleRequest($request) && $form->isValid()) {
@@ -85,7 +85,7 @@ class MenuController extends Controller
 
             $this->addFlash('success', 'Меню успешно сохранено');
 
-            return $this->redirectToRoute('admin_rise_menu_list');
+            return $this->redirectToRoute('admin_menu_list');
         }
 
         return $this->render('admin/menu/menu/update.html', [
@@ -105,6 +105,6 @@ class MenuController extends Controller
 
         $this->addFlash('success', 'Меню успешно удалено');
 
-        return $this->redirectToRoute('admin_rise_menu_list');
+        return $this->redirectToRoute('admin_menu_list');
     }
 }
