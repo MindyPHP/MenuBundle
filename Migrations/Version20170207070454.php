@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Mindy Framework.
- * (c) 2017 Maxim Falaleev
+ * (c) 2018 Maxim Falaleev
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -27,7 +29,6 @@ class Version20170207070454 extends AbstractMigration
         $table = $schema->createTable(Menu::tableName());
         $table->addColumn('id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
         $table->addColumn('name', 'string', ['length' => 255]);
-        $table->addColumn('slug', 'string', ['length' => 255, 'notnull' => false]);
         $table->addColumn('url', 'string', ['length' => 255, 'notnull' => false]);
         $table->addColumn('lft', 'integer', ['length' => 11, 'unsigned' => true]);
         $table->addColumn('rgt', 'integer', ['length' => 11, 'unsigned' => true]);

@@ -1,0 +1,18 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    _instanceof:
+        Mindy\Template\Library\LibraryInterface:
+            public: true
+            tags: ['template.library']
+
+    Mindy\Bundle\MenuBundle\:
+        resource: '../../*'
+        exclude: '../../{Tests,vendor}'
+
+    Mindy\Bundle\MenuBundle\Controller\:
+        resource: '../../Controller'
+        tags: ['controller.service_arguments']

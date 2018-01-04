@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Mindy Framework.
- * (c) 2017 Maxim Falaleev
+ * (c) 2018 Maxim Falaleev
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,22 +13,22 @@
 namespace Mindy\Bundle\MenuBundle\Library;
 
 use Mindy\Bundle\MenuBundle\Model\Menu;
-use Mindy\Template\Library;
-use Mindy\Template\RendererInterface;
+use Mindy\Template\Library\AbstractLibrary;
+use Mindy\Template\TemplateEngine;
 
-class MenuLibrary extends Library
+class MenuLibrary extends AbstractLibrary
 {
     /**
-     * @var RendererInterface
+     * @var TemplateEngine
      */
     protected $template;
 
     /**
      * MenuLibrary constructor.
      *
-     * @param RendererInterface $template
+     * @param TemplateEngine $template
      */
-    public function __construct(RendererInterface $template)
+    public function __construct(TemplateEngine $template)
     {
         $this->template = $template;
     }
@@ -37,31 +39,23 @@ class MenuLibrary extends Library
     public function getHelpers()
     {
         return [
-            'render_menu' => function ($slug, $template = 'menu/menu.html') {
-                return $this->renderMenu($slug, $template);
+            'render_menu' => function ($id, $template = 'menu/menu.html') {
+                return $this->renderMenu($id, $template);
             },
-            'get_menu' => function ($slug) {
-                return $this->getMenu($slug);
+            'get_menu' => function ($id) {
+                return $this->getMenu($id);
             },
         ];
     }
 
     /**
-     * @return array
-     */
-    public function getTags()
-    {
-        return [];
-    }
-
-    /**
-     * @param string $slug
+     * @param string|int $id
      *
      * @return array
      */
-    protected function getMenu($slug)
+    protected function getMenu($id): array
     {
-        $menu = Menu::objects()->get(['slug' => $slug]);
+        $menu = Menu::objects()->get(['pk' => $id]);
         if ($menu === null) {
             return [];
         }
@@ -74,14 +68,14 @@ class MenuLibrary extends Library
     }
 
     /**
-     * @param string $slug
-     * @param string $template
+     * @param string|int $id
+     * @param string     $template
      *
      * @return null|string
      */
-    protected function renderMenu($slug, $template = 'menu/menu.html')
+    protected function renderMenu($id, $template = 'menu/menu.html')
     {
-        $items = $this->getMenu($slug);
+        $items = $this->getMenu($id);
 
         if (empty($items)) {
             return null;

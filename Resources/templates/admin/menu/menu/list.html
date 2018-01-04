@@ -1,0 +1,87 @@
+{% extends "admin/base.html" %}
+
+{% block breadcrumbs %}
+    {% set breadcrumbs = [
+    ['name' => 'Меню']
+    ] %}
+    {% parent %}
+{% endblock %}
+
+{% block content %}
+    <h1 class="b-heading">Меню</h1>
+
+    <a href="{{ url('admin_menu_create') }}" class="b-button">Добавить меню / пункт меню</a>
+
+    <table class="b-table">
+        <thead class="b-table__thead">
+        <tr class="b-table__tr">
+            <th class="b-table__th">Название</th>
+            <th class="b-table__th">Ссылка</th>
+            <th class="b-table__th">Идентификатор</th>
+            <th class="b-table__th"></th>
+        </tr>
+        </thead>
+        <tbody class="b-table__tbody">
+        {% for item in menu %}
+            <tr class="b-table__tr">
+                {% comment %}
+                <td class="b-table__td b-td__sort">
+                    <span class="sorting--container">
+                        <span class="b-icon">&#xE3C7;</span>
+                    </span>
+                </td>
+                {% endcomment %}
+                {% include "admin/menu/menu/_menu_row.html" with ['item' => item] %}
+                <td class="b-table__td b-td__actions">
+                    <a class="b-td__link"
+                       href="{{ url('admin_menu_update', ['id' => item.id]) }}" title="Изменить">
+                        <span class="b-icon">&#xE254;</span>
+                    </a>
+                    <a class="b-td__link"
+                       data-confirm="Вы действительно хотите удалить запись?"
+                       href="{{ url('admin_menu_remove', ['id' => item.id]) }}" title="Удалить">
+                        <span class="b-icon">&#xE872;</span>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block js %}
+    {% comment %}
+    <script type="text/javascript">
+        $(".b-table__tbody").sortable({
+            items: 'tr',
+            handle: '.sorting--container',
+            axis: 'y',
+            placeholder: "highlight",
+            helper: function (e, ui) {
+                ui.children().each(function () {
+                    var $this = $(this);
+                    $this.width($this.width());
+                });
+                return ui;
+            },
+            update: function (event, ui) {
+                var $to = $(ui.item),
+                    $prev = $to.prev(),
+                    $next = $to.next(),
+                    data = $(this).sortable('toArray', { attribute: 'data-pk' });
+
+                fetch.post('{{ url('admin_menu_sort') }}', {}, {
+                    models: data,
+                    pk: $to.data('pk'),
+                    insertAfter: $prev.data('pk'),
+                    insertBefore: $next.data('pk')
+                }).then(function (data) {
+                    $('#main-form').replaceWith(data);
+                }).catch(function () {
+                    notify({ title: 'Произошла ошибка' });
+                });
+            }
+        });
+    </script>
+    {% endcomment %}
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "admin/base.html" %}
+
+{% block breadcrumbs %}
+    {% set breadcrumbs = [
+    ['name' => 'Меню', 'url' => url('admin_menu_list')],
+    ['name' => 'Добавление меню']
+    ] %}
+    {% parent %}
+{% endblock %}
+
+{% block content %}
+    <h1 class="b-heading">Добавление меню</h1>
+    {{ form_render(form)|safe }}
+{% endblock %}

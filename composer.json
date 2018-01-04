@@ -1,6 +1,12 @@
 {
     "name": "mindy/menu-bundle",
     "license": "MIT",
+    "config": {
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true
+    },
     "autoload": {
         "psr-4": {
             "Mindy\\Bundle\\MenuBundle\\": ""
@@ -15,11 +21,10 @@
         }
     },
     "require": {
-        "php": ">=5.5.9",
-        "mindy/validation": "~3.0",
-        "mindy/orm-bundle": "~3.0",
-        "mindy/admin-bundle": "~3.0",
-        "mindy/form-bundle": "~3.0"
+        "php": ">=7.0",
+        "mindy/validation": "~4.0",
+        "mindy/orm-bundle": "~4.0",
+        "mindy/form-bundle": "~4.0"
     },
     "authors": [
         {
@@ -28,18 +33,9 @@
             "homepage": "http://studio107.ru"
         }
     ],
-    "minimum-stability": "dev",
-    "extra": {
-        "branch-alias": {
-            "dev-master": "3.6.8-dev"
-        }
-    },
     "require-dev": {
-        "symfony/dependency-injection": "~3.0",
-        "phpunit/phpunit": "~4.0",
-        "symfony/config": "~3.0",
-        "symfony/property-access": "~3.0",
-        "symfony/validator": "~3.0",
-        "mindy/validation": "~3.0"
+        "mindy/mindy-bundle": "~4.0",
+        "phpunit/phpunit": "^6.5",
+        "symfony/framework-bundle": "~3.0|~4.0"
     }
 }

@@ -11,7 +11,7 @@
     </php>
 
     <testsuites>
-        <testsuite name="Mindy Symfony Bundle Test Suite">
+        <testsuite name="Test Suite">
             <directory>./Tests/</directory>
         </testsuite>
     </testsuites>
