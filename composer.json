@@ -22,7 +22,6 @@
     },
     "require": {
         "php": ">=7.0",
-        "mindy/validation": "~4.0",
         "mindy/orm-bundle": "~4.0",
         "mindy/form-bundle": "~4.0"
     },
