@@ -2,19 +2,27 @@
 
 {% block breadcrumbs %}
     {% set breadcrumbs = [
-    ['name' => 'Меню']
+    ['name' => 'Меню', 'url' => url('admin_menu_list')]
     ] %}
+    {% if parent %}
+        {% for item in parent.objects().ancestors(true).order(['lft']).all() %}
+            {% set breadcrumbs = breadcrumbs|merge([
+            ['name' => item.name, 'url' => url('admin_menu_list', ['parent_id' => item.id])]
+            ]) %}
+        {% endfor %}
+    {% endif %}
     {% parent %}
 {% endblock %}
 
 {% block content %}
     <h1 class="b-heading">Меню</h1>
 
-    <a href="{{ url('admin_menu_create') }}" class="b-button">Добавить меню / пункт меню</a>
+    <a href="{{ url('admin_menu_create', ['parent_id' => parent ? parent.id : null]) }}" class="b-button">Добавить пункт меню</a>
 
-    <table class="b-table">
+    <table class="b-table" data-sorting>
         <thead class="b-table__thead">
         <tr class="b-table__tr">
+            <th class="b-table__th"></th>
             <th class="b-table__th">Название</th>
             <th class="b-table__th">Ссылка</th>
             <th class="b-table__th">Идентификатор</th>
@@ -23,14 +31,12 @@
         </thead>
         <tbody class="b-table__tbody">
         {% for item in menu %}
-            <tr class="b-table__tr">
-                {% comment %}
-                <td class="b-table__td b-td__sort">
+            <tr class="b-table__tr" data-id="{{ item.id }}">
+                <td class="b-table__td b-table__td_sort">
                     <span class="sorting--container">
                         <span class="b-icon">&#xE3C7;</span>
                     </span>
                 </td>
-                {% endcomment %}
                 {% include "admin/menu/menu/_menu_row.html" with ['item' => item] %}
                 <td class="b-table__td b-td__actions">
                     <a class="b-td__link"
@@ -47,41 +53,6 @@
         {% endfor %}
         </tbody>
     </table>
-{% endblock %}
 
-{% block js %}
-    {% comment %}
-    <script type="text/javascript">
-        $(".b-table__tbody").sortable({
-            items: 'tr',
-            handle: '.sorting--container',
-            axis: 'y',
-            placeholder: "highlight",
-            helper: function (e, ui) {
-                ui.children().each(function () {
-                    var $this = $(this);
-                    $this.width($this.width());
-                });
-                return ui;
-            },
-            update: function (event, ui) {
-                var $to = $(ui.item),
-                    $prev = $to.prev(),
-                    $next = $to.next(),
-                    data = $(this).sortable('toArray', { attribute: 'data-pk' });
-
-                fetch.post('{{ url('admin_menu_sort') }}', {}, {
-                    models: data,
-                    pk: $to.data('pk'),
-                    insertAfter: $prev.data('pk'),
-                    insertBefore: $next.data('pk')
-                }).then(function (data) {
-                    $('#main-form').replaceWith(data);
-                }).catch(function () {
-                    notify({ title: 'Произошла ошибка' });
-                });
-            }
-        });
-    </script>
-    {% endcomment %}
+    {{ pagination_render(pager)|safe }}
 {% endblock %}

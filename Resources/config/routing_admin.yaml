@@ -1,7 +1,10 @@
 admin_menu_create:
-    path: /create
+    path: /create/{parent_id}
     defaults:
         _controller: \Mindy\Bundle\MenuBundle\Controller\Admin\MenuController::create
+        parent_id: null
+    requirements:
+        parent_id: \w+
 
 admin_menu_update:
     path: /update/{id}
@@ -18,12 +21,9 @@ admin_menu_remove:
         id: \d+
 
 admin_menu_list:
-    path: /list
+    path: /list/{parent_id}
     defaults:
         _controller: \Mindy\Bundle\MenuBundle\Controller\Admin\MenuController::list
-
-admin_menu_sort:
-    path: /sort
-    methods: [ POST ]
-    defaults:
-        _controller: \Mindy\Bundle\MenuBundle\Controller\Admin\MenuController::sort
+        parent_id: null
+    requirements:
+        parent_id: \w+

@@ -1,6 +1,9 @@
 <td class="b-table__td">
-    {% set arrow = '<i class="b-icon">&#xE5DA;</i>' %}
-    {{ arrow|repeat(item.level - 1)|safe }} {{ item }}
+    {% if item.isLeaf() %}
+        {{ item }}
+    {% else %}
+        <a href="{{ url('admin_menu_list', ['parent_id' => item.id]) }}">{{ item }}</a>
+    {% endif %}
 </td>
 <td class="b-table__td">
     {{ item.url }}

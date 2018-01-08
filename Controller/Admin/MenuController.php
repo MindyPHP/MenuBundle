@@ -12,37 +12,62 @@ declare(strict_types=1);
 
 namespace Mindy\Bundle\MenuBundle\Controller\Admin;
 
+use Mindy\Bundle\AdminBundle\Sort\SortFactory;
 use Mindy\Bundle\MenuBundle\Form\Admin\MenuForm;
 use Mindy\Bundle\MenuBundle\Model\Menu;
 use Mindy\Bundle\MindyBundle\Controller\Controller;
+use Mindy\Bundle\PaginationBundle\Utils\PaginationTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class MenuController extends Controller
 {
-    public function list(Request $request)
+    use PaginationTrait;
+
+    public function list(Request $request, int $parent_id = null)
     {
-        $menu = Menu::objects()->order(['root', 'lft'])->all();
+        $parent = null;
+        $qs = Menu::objects()->order(['root', 'lft']);
+        if (empty($parent_id)) {
+            $qs->roots();
+        } else {
+            $parent = Menu::objects()->get(['id' => $parent_id]);
+            if (null === $parent) {
+                throw new NotFoundHttpException();
+            }
+
+            $qs->filter(['parent_id' => $parent_id]);
+        }
+
+        $sort = $request->request->get('sort', []);
+        if (false === empty($sort) || false === is_array($sort)) {
+            /** @var SortFactory $sortHandler */
+            $sortHandler = $this->get(SortFactory::class);
+            $sortHandler->sort($qs, $sort);
+        }
+
+        $pager = $this->createPagination($qs);
 
         return $this->render('admin/menu/menu/list.html', [
-            'menu' => $menu,
+            'menu' => $pager->paginate(),
+            'parent' => $parent,
+            'pager' => $pager->createView(),
         ]);
     }
 
-    public function sort(Request $request)
+    public function create(Request $request, int $parent_id = null)
     {
-        //        $sortHandler = $this->get('mindy.bundle.admin.utils.sort_handler');
-//        $sortHandler->handle($request)
-        $menu = Menu::objects()->order(['root', 'lft'])->all();
+        $parent = null;
+        if (false === empty($parent_id)) {
+            $parent = Menu::objects()->get(['id' => $parent_id]);
+            if (null === $parent) {
+                throw new NotFoundHttpException();
+            }
+        }
 
-        return $this->render('admin/menu/menu/list.html', [
-            'menu' => $menu,
+        $menu = new Menu([
+            'parent' => $parent
         ]);
-    }
-
-    public function create(Request $request)
-    {
-        $menu = new Menu();
 
         $form = $this->createForm(MenuForm::class, $menu, [
             'method' => 'POST',
@@ -62,6 +87,7 @@ class MenuController extends Controller
 
         return $this->render('admin/menu/menu/create.html', [
             'form' => $form->createView(),
+            'parent' => $parent,
         ]);
     }
 

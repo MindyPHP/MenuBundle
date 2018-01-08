@@ -3,8 +3,15 @@
 {% block breadcrumbs %}
     {% set breadcrumbs = [
     ['name' => 'Меню', 'url' => url('admin_menu_list')],
-    ['name' => 'Редактирование меню: ' ~ menu]
     ] %}
+    {% for item in menu.objects().ancestors().order(['lft']).all() %}
+        {% set breadcrumbs = breadcrumbs|merge([
+        ['name' => item.name, 'url' => url('admin_menu_list', ['parent_id' => item.id])]
+        ]) %}
+    {% endfor %}
+    {% set breadcrumbs = breadcrumbs|merge([
+    ['name' => 'Редактирование меню: ' ~ menu]
+    ]) %}
     {% parent %}
 {% endblock %}
 
