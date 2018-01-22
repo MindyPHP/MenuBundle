@@ -82,6 +82,12 @@ class MenuController extends Controller
 
             $this->addFlash('success', 'Меню успешно сохранено');
 
+            if ($form->get('submit_create')->isClicked()) {
+                return $this->redirectToRoute('admin_menu_create', [
+                    'parent_id' => $menu->parent_id
+                ]);
+            }
+
             return $this->redirectToRoute('admin_menu_list');
         }
 

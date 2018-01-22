@@ -53,6 +53,9 @@ class MenuForm extends AbstractType
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Сохранить',
+            ])
+            ->add('submit_create', SubmitType::class, [
+                'label' => 'Сохранить и создать',
             ]);
     }
 
